@@ -25,8 +25,28 @@ generateBtn.addEventListener('click', async () => {
     // 배너 템플릿 그리기
     ctx.drawImage(templateImage, 0, 0, 1029, 258);
 
-    // 비주얼 그리기 (x=48, y=36에 315x186 사이즈로)
-    ctx.drawImage(visualImage, 48, 36, 315, 186);
+    // 둥근 모서리 클리핑 경로 설정
+    const x = 48; // 비주얼 시작 x 좌표
+    const y = 36; // 비주얼 시작 y 좌표
+    const width = 315; // 비주얼 가로 크기
+    const height = 186; // 비주얼 세로 크기
+    const radius = 20; // 둥근 모서리 반지름
+
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.clip();
+
+    // 비주얼 그리기 (클리핑 적용 후)
+    ctx.drawImage(visualImage, x, y, width, height);
 
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     zip.file(`${visualFile.name.replace(/\..+$/, '')}_banner.png`, blob);
