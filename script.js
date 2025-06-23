@@ -22,7 +22,7 @@ generateBtn.addEventListener('click', async () => {
     canvas.height = 258;
     const ctx = canvas.getContext('2d');
 
-    // ���너 템플릿 그리기
+    // 배너 템플릿 그리기
     ctx.drawImage(templateImage, 0, 0, 1029, 258);
 
     // 둥근 모서리 클리핑 경로 설정
