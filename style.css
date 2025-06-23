@@ -24,21 +24,3 @@ button {
 #preview {
   margin-top: 20px;
 }
-
-/* 이미지 영역 스타일 */
-.image-area {
-  position: relative; /* Positioning context for absolute positioning */
-  width: 315px; /* 이미지 가로 크기 */
-  height: 186px; /* 이미지 세로 크기 */
-  margin-left: 48px; /* 좌측 여백 */
-  margin-top: 38px; /* 상단 여백 */
-  margin-bottom: 38px; /* 하단 여백 */
-}
-
-/* 이미지가 들어갈 canvas 스타일 */
-#result-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 10px; /* 둥근 모서리 */
-}
