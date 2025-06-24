@@ -20,7 +20,14 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  margin-bottom: 10px; /* 버튼 간 간격 추가 */
 }
-#preview {
-  margin-top: 20px;
+
+/* 버튼 위치 (캔버스 아래에 배치) */
+.button-container {
+  text-align: center; /* 가운데 정렬 */
+  margin-top: 20px; /* 캔버스와의 간격 */
 }
