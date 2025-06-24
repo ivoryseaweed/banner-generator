@@ -3,7 +3,7 @@ const visualsInput = document.getElementById('visualsInput');
 const buttonContainer = document.querySelector('.button-container');
 const downloadBtn = document.getElementById('downloadBtn');
 const resetBtn = document.getElementById('resetBtn');
-const canvas = document.getElementById('canvas');
+const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
 let templateImage = null;
@@ -52,13 +52,7 @@ async function loadImages() {
     try {
         templateImage = await loadImage(URL.createObjectURL(templateFile));
         visualImages = await Promise.all(files.map(file => loadImage(URL.createObjectURL(file))));
-
-        // 이미지 로딩 후 선택된 버튼에 대해 유효성 검사 및 합성 진행
-        if (selectedButton) {
-            processBanner(selectedButton);
-        } else {
-            alert('이미지 로딩 완료! px 사이즈 버튼을 누르세요');
-        }
+         alert('이미지 로딩 완료! px 사이즈 버튼을 누르세요');
     } catch (error) {
         console.error("이미지 로딩 중 오류 발생:", error);
         alert('이미지 로딩 중 오류가 발생했습니다.');
@@ -108,108 +102,113 @@ function drawVisualImage(width, height, radius, mimeType, img, offsetX = 0, offs
     return canvas.toDataURL(mimeType, (mimeType === 'image/jpeg' ? 0.9 : 1));
 }
 
-// 배너 생성 및 다운로드 처리 함수
-async function processBanner(button) {
-    if (!visualImages.length || !templateImage) {
-        alert('배너 템플릿과 비주얼 이미지를 모두 업로드해주세요!');
-        return;
-    }
-
-    const width = parseInt(button.dataset.width);
-    const height = parseInt(button.dataset.height);
-    const radius = parseInt(button.dataset.radius);
-    const mimeType = button.dataset.mime;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    // 오프셋 값 설정
-    if (width === 315 && height === 186) {
-        offsetX = 48;
-        offsetY = 36;
-    } else if (width === 232 && height === 232) {
-        offsetX = 260;
-        offsetY = 13;
-    } else if (width === 1200 && height === 497) {
-        offsetY = 193;
-    }
-
-    bannerDataURLs = []; // 초기화
-
-    // 이미지 합성
-    for (const img of visualImages) {
-        if (!validateImageSize(img, width, height)) {
-            alert(`업로드된 이미지 중 하나 이상의 이미지 사이즈가 선택된 버튼 사이즈와 맞지 않습니다.`);
+        const processBanner = (button) => {
+        if (!visualImages.length || !templateImage) {
+            alert('배너 템플릿과 비주얼 이미지를 모두 업로드해주세요!');
             return;
         }
-        const bannerData = drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY);
-        bannerDataURLs.push(bannerData);
-    }
-    alert(`${button.innerText} 배너가 생성되었습니다.`);
-}
 
-// 배너 생성 버튼 클릭 이벤트
-buttonContainer.addEventListener('click', (event) => {
-    if (event.target.tagName === 'BUTTON') {
-        removeActiveClasses();
-        const button = event.target;
-        button.classList.add('active');
-        selectedButton = button;
-        processBanner(button);
-    }
-});
+        const width = parseInt(button.dataset.width);
+        const height = parseInt(button.dataset.height);
+        const radius = parseInt(button.dataset.radius);
+        const mimeType = button.dataset.mime;
+        let offsetX = 0;
+        let offsetY = 0;
 
-// 다운로드 버튼 클릭 이벤트
-downloadBtn.addEventListener('click', async () => {
-    if (!selectedButton) {
-        alert('px 사이즈 버튼을 먼저 눌러주세요!');
-        return;
-    }
+        // 오프셋 값 설정
+        if (width === 315 && height === 186) {
+            offsetX = 48;
+            offsetY = 36;
+        } else if (width === 232 && height === 232) {
+            offsetX = 260;
+            offsetY = 13;
+        } else if (width === 1200 && height === 497) {
+            offsetY = 193;
+        }
 
-    if (bannerDataURLs.length === 0) {
-        alert('생성된 배너가 없습니다.');
-        return;
-    }
+         bannerDataURLs = [];
+            for (const img of visualImages) {
+                if (!validateImageSize(img, width, height)) {
+                    alert(`업로드된 이미지 중 하나 이상의 이미지 사이즈가 선택된 버튼 사이즈와 맞지 않습니다.`);
+                    return;
+                }
+                 bannerDataURLs.push(drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY));
+            } 
+            alert(`${button.innerText} 배너가 생성되었습니다.`);
+        }
 
-    const zip = new JSZip();
-    const width = parseInt(selectedButton.dataset.width);
-    const height = parseInt(selectedButton.dataset.height);
-    const mimeType = selectedButton.dataset.mime;
 
-    for (let i = 0; i < visualImages.length; i++) {
-        const bannerData = bannerDataURLs[i];
-        const fileName = `banner_${width}x${height}_${i + 1}.${mimeType.split('/')[1]}`;
-        const base64Image = bannerData.split(',')[1];
-        zip.file(fileName, base64Image, {
-            base64: true
+        // 배너 생성 버튼 클릭 이벤트
+        buttonContainer.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                removeActiveClasses();
+                const button = event.target;
+                button.classList.add('active');
+                selectedButton = button;
+                   loadImages();
+            }
         });
-    }
 
-    try {
-        const content = await zip.generateAsync({
-            type: 'blob'
+        // 다운로드 버튼 클릭 이벤트
+        downloadBtn.addEventListener('click', async () => {
+            if (!selectedButton) {
+                alert('px 사이즈 버튼을 먼저 눌러주세요!');
+                return;
+            }
+
+            if (bannerDataURLs.length === 0) {
+                alert('생성된 배너가 없습니다.');
+                return;
+            }
+
+            const zip = new JSZip();
+            const width = parseInt(selectedButton.dataset.width);
+            const height = parseInt(selectedButton.dataset.height);
+            const mimeType = selectedButton.dataset.mime;
+
+            for (let i = 0; i < visualImages.length; i++) {
+                const bannerData = bannerDataURLs[i];
+                const fileName = `banner_${width}x${height}_${i + 1}.${mimeType.split('/')[1]}`;
+                const base64Image = bannerData.split(',')[1];
+                zip.file(fileName, base64Image, {
+                    base64: true
+                });
+            }
+
+            try {
+                const content = await zip.generateAsync({
+                    type: 'blob'
+                });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = 'banners.zip';
+                link.click();
+            } catch (error) {
+                console.error("ZIP 파일 생성 중 오류 발생:", error);
+                alert('ZIP 파일 생성 중 오류가 발생했습니다.');
+            }
         });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(content);
-        link.download = 'banners.zip';
-        link.click();
-    } catch (error) {
-        console.error("ZIP 파일 생성 중 오류 발생:", error);
-        alert('ZIP 파일 생성 중 오류가 발생했습니다.');
-    }
-});
 
-// 초기화 버튼 클릭 이벤트
-resetBtn.addEventListener('click', () => {
-    removeActiveClasses();
-    resetState();
-    alert("초기화 되었습니다. 템플릿과 비주얼 이미지를 다시 업로드하고 px 사이즈 버튼을 누르세요");
-});
+        // 초기화 버튼 클릭 이벤트
+        resetBtn.addEventListener('click', () => {
+            removeActiveClasses();
+            resetState();
+            alert("초기화 되었습니다. 템플릿과 비주얼 이미지를 다시 업로드하고 px 사이즈 버튼을 누르세요");
+        });
 
-// 템플릿, 비주얼 이미지 로드
-templateInput.addEventListener('change', loadImages);
-visualsInput.addEventListener('change', loadImages);
+        // 템플릿, 비주얼 이미지 로드
+        templateInput.addEventListener('change',  () => {
+            loadImages();
+        });
+        visualsInput.addEventListener('change', () => {
+            loadImages();
+        });
 
-// 페이지 로드 시 초기화
-window.onload = () => {
-    resetState();
-}
+        // 페이지 로드 시 초기화
+        window.onload = () => {
+            resetState();
+        }
+    </script>
+</body>
+
+</html>
