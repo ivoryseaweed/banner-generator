@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>배너 이미지 생성기</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>배너 제작 사이트</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🎨 배너 이미지 자동 생성기</h1>
+        <h1>배너 제작</h1>
 
-        <div class="button-container">
-            <button class="size-button" data-width="315" data-height="186" data-radius="20" data-mime="image/png">315x186 (PNG)</button>
-            <button class="size-button" data-width="232" data-height="232" data-radius="15" data-mime="image/png">232x232 (PNG)</button>
-            <button class="size-button" data-width="1200" data-height="497" data-radius="0" data-mime="image/jpeg">1200x497 (JPG)</button>
+        <!-- 버튼 선택 -->
+        <div class="button-selection">
+            <button data-size="315x186">315x186</button>
+            <button data-size="232x232">232x232</button>
+            <button data-size="1200x497">1200x497</button>
         </div>
 
-        <div class="upload-area">
-            <label for="templateInput">배너 템플릿 업로드:</label>
-            <input type="file" id="templateInput" accept="image/*" />
+        <!-- 이미지 업로드 -->
+        <div class="image-upload">
+            <label for="template-image">템플릿 이미지 업로드:</label>
+            <input type="file" id="template-image" accept="image/*">
 
-            <label for="visualsInput">비주얼 이미지들 업로드 (여러 개):</label>
-            <input type="file" id="visualsInput" accept="image/*" multiple />
+            <label for="visual-images">비주얼 이미지 업로드 (다중 선택 가능):</label>
+            <input type="file" id="visual-images" accept="image/*" multiple>
         </div>
 
-        <div class="button-container">
-            <button id="downloadBtn">다운로드</button>
-            <button id="resetBtn">초기화</button>
+        <!-- 캔버스 영역 -->
+        <div class="canvas-container">
+            <canvas id="banner-canvas"></canvas>
+        </div>
+
+        <!-- 컨트롤 버튼 -->
+        <div class="controls">
+            <button id="download-button">다운로드</button>
+            <button id="reset-button">초기화</button>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
