@@ -35,8 +35,8 @@ button.active {
     color: white;
 }
 
-/* 버튼 위치 (캔버스 아래에 배치) */
+/* 버튼 위치 (캔버스 위에 배치) */
 .button-container {
     text-align: center;
-    margin-top: 20px;
+    margin-bottom: 20px; /* 템플릿 업로드와의 간격 */
 }
