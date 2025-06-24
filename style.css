@@ -21,7 +21,6 @@ body {
     align-items: center;
 }
 
-/* 파일 업로드 영역 스타일 */
 .upload-area {
     display: flex;
     flex-direction: column;
@@ -41,7 +40,6 @@ body {
     border-radius: 4px;
 }
 
-/* 버튼 스타일 */
 button {
     padding: 10px 20px;
     font-size: 16px;
