@@ -6,6 +6,7 @@ const button2 = document.getElementById('button2');
 const button3 = document.getElementById('button3');
 
 let visualImage; // 전역 변수로 선언
+let templateImage; // 전역 변수로 선언
 
 async function generateBanners() {
   const templateFile = templateInput.files[0];
@@ -16,12 +17,12 @@ async function generateBanners() {
     return;
   }
 
-  const templateImage = await loadImage(URL.createObjectURL(templateFile));
+  templateImage = await loadImage(URL.createObjectURL(templateFile));
+
   const zip = new JSZip();
 
   for (const visualFile of visualFiles) {
-    visualImage = await loadImage(URL.createObjectURL(visualFile)); // visualImage 로드
-
+    visualImage = await loadImage(URL.createObjectURL(visualFile));
     const canvas = document.createElement('canvas');
     canvas.width = 1029;
     canvas.height = 258;
@@ -29,9 +30,6 @@ async function generateBanners() {
 
     // 배너 템플릿 그리기
     ctx.drawImage(templateImage, 0, 0, 1029, 258);
-
-    // 함수 내에서 바로 drawVisualImage를 호출하지 않고,
-    // 버튼 클릭 시 drawVisualImage가 호출되도록 수정했습니다.
 
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     zip.file(`${visualFile.name.replace(/\..+$/, '')}_banner.png`, blob);
@@ -44,22 +42,29 @@ async function generateBanners() {
   link.click();
 }
 
+function removeActiveClasses() {
+  button1.classList.remove('active');
+  button2.classList.remove('active');
+  button3.classList.remove('active');
+}
 
 button1.addEventListener('click', () => {
-  // 이미지 비주얼 사이즈 1에 맞춰 이미지 합성 (기존 방식 유지)
+  removeActiveClasses();
+  button1.classList.add('active');
   drawVisualImage(ctx, visualImage, 48, 36, 315, 186, 20, 'image/png');
 });
 
 button2.addEventListener('click', () => {
-  // 이미지 비주얼 사이즈 2에 맞춰 이미지 합성
-  drawVisualImage(ctx, visualImage, 260, 13, 232, 232, 15, 'image/png'); // 둥근 모서리 반지름 15
+  removeActiveClasses();
+  button2.classList.add('active');
+  drawVisualImage(ctx, visualImage, 260, 13, 232, 232, 15, 'image/png');
 });
 
 button3.addEventListener('click', () => {
-  // 이미지 비주얼 사이즈 3에 맞춰 이미지 합성
-  drawVisualImage(ctx, visualImage, 0, 193, 1200, 497, 0, 'image/jpeg'); // 둥근 모서리 없음
+  removeActiveClasses();
+  button3.classList.add('active');
+  drawVisualImage(ctx, visualImage, 0, 193, 1200, 497, 0, 'image/jpeg');
 });
-
 
 function loadImage(src) {
   return new Promise((resolve) => {
@@ -71,29 +76,29 @@ function loadImage(src) {
 }
 
 function drawVisualImage(ctx, visualImage, x, y, width, height, radius, mimeType) {
-  if (!visualImage) {
-        alert('비주얼 이미지를 먼저 업로드해주세요!');
-        return;
-    }
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 초기화
-    ctx.drawImage(templateImage, 0, 0); // 템플릿 다시 그리기
-    // 둥근 모서리 클리핑 경로 설정
-    if (radius > 0) {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      ctx.clip();
-    }
+  if (!visualImage || !templateImage) {
+    alert('배너 템플릿과 비주얼 이미지를 먼저 업로드해주세요!');
+    return;
+  }
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 캔버스 초기화
+  ctx.drawImage(templateImage, 0, 0); // 템플릿 다시 그리기
+  // 둥근 모서리 클리핑 경로 설정
+  if (radius > 0) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.clip();
+  }
 
-    // 비주얼 그리기 (클리핑 적용 후)
-    ctx.drawImage(visualImage, x, y, width, height);
+  // 비주얼 그리기 (클리핑 적용 후)
+  ctx.drawImage(visualImage, x, y, width, height);
 }
 generateBtn.addEventListener('click', generateBanners);
