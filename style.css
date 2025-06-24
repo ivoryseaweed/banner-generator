@@ -12,9 +12,9 @@ body {
     max-width: 600px;
     margin: auto;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    display: flex; /* flexbox 사용 */
-    flex-direction: column; /* 수직 방향으로 요소 배치 */
-    align-items: center; /* 가로축 중앙 정렬 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 input {
@@ -34,23 +34,22 @@ button {
 
 /* 활성화된 버튼 스타일 */
 button.active {
-    background-color: #007bff; /* 원하는 색상으로 변경 */
+    background-color: #007bff;
     color: white;
 }
 
-/* 버튼 위치 (캔버스 위에 배치) */
 .button-container {
     text-align: center;
-    margin-bottom: 20px; /* 템플릿 업로드와의 간격 */
-    width: 100%; /* 컨테이너 가로 폭 채우기 */
-    display: flex; /* flexbox 사용 */
-    justify-content: center; /* 가로축 중앙 정렬 */
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .button-container button {
-    margin: 0 5px; /* 버튼 간 간격 조절 */
+    margin: 0 5px;
 }
 
 #canvas {
-  margin-bottom: 20px; /* 캔버스와 다운로드 버튼 간 간격 */
+  margin-bottom: 20px;
 }
