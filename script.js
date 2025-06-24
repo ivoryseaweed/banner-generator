@@ -18,8 +18,8 @@ function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(img);
-        img.onerror = (e) => reject(e);
+        img.onload = () => resolve(resolve(img));
+        img.onerror = () => reject(reject(img));
         img.src = src;
     });
 }
@@ -71,8 +71,8 @@ function removeActiveClasses() {
 
 // 이미지 사이즈 검증 함수
 function validateImageSize(img, width, height) {
-  const aspectRatio = width / height;
-  const imgAspectRatio = img.width / img.height;
+    const aspectRatio = width / height;
+    const imgAspectRatio = img.width / img.height;
 
     // 정확히 일치하거나, 가로 세로 비율이 같다면 true 반환
     return (img.width === width && img.height === height) || (Math.abs(aspectRatio - imgAspectRatio) < 0.01); // 오차범위 0.01
@@ -104,7 +104,6 @@ function drawVisualImage(width, height, radius, mimeType, img, offsetX = 0, offs
         ctx.closePath();
         ctx.clip();
     }
-  
     ctx.drawImage(img, offsetX, offsetY, width, height);
     return canvas.toDataURL(mimeType, (mimeType === 'image/jpeg' ? 0.9 : 1));
 }
@@ -135,7 +134,7 @@ async function processBanner(button) {
     }
 
     bannerDataURLs = []; // 초기화
-  
+    
         // 이미지 합성
         for (const img of visualImages) {
             if (!validateImageSize(img, width, height)) {
@@ -145,7 +144,7 @@ async function processBanner(button) {
             const bannerData = drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY);
             bannerDataURLs.push(bannerData);
         }
-    alert(`${button.innerText} 배너가 생성되었습니다.`);
+        alert(`${button.innerText} 배너가 생성되었습니다.`);
 }
 
 // 배너 생성 버튼 클릭 이벤트
