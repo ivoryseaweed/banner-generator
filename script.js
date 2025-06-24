@@ -7,9 +7,9 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 let templateImage = null;
-let visualImages = []; // 다중 이미지 지원을 위해 배열로 변경
+let visualImages = [];
 let selectedButton = null;
-let bannerDataURLs = []; // 생성된 배너 데이터들을 저장할 배열
+let bannerDataURLs = [];
 let canvasWidth = 1029;
 let canvasHeight = 258;
 
@@ -70,12 +70,12 @@ function removeActiveClasses() {
 }
 
 // 이미지 사이즈 검증 함수
-function validateImageSize(width, height, img) {
-    if (img.width !== width || img.height !== height) {
-        alert(`업로드된 이미지 사이즈가 선택된 버튼 사이즈와 다릅니다. (${width}x${height} 이미지를 업로드해주세요.)`);
-        return false;
-    }
-    return true;
+function validateImageSize(img, width, height) {
+  const aspectRatio = width / height;
+  const imgAspectRatio = img.width / img.height;
+
+    // 정확히 일치하거나, 가로 세로 비율이 같다면 true 반환
+    return (img.width === width && img.height === height) || (Math.abs(aspectRatio - imgAspectRatio) < 0.01); // 오차범위 0.01
 }
 
 // 이미지 합성 함수
@@ -104,6 +104,7 @@ function drawVisualImage(width, height, radius, mimeType, img, offsetX = 0, offs
         ctx.closePath();
         ctx.clip();
     }
+  
     ctx.drawImage(img, offsetX, offsetY, width, height);
     return canvas.toDataURL(mimeType, (mimeType === 'image/jpeg' ? 0.9 : 1));
 }
@@ -134,19 +135,17 @@ async function processBanner(button) {
     }
 
     bannerDataURLs = []; // 초기화
-    let allValid = true;
-
-    // 이미지 사이즈 검증 및 합성
-    for (let i = 0; i < visualImages.length; i++) {
-        if (!validateImageSize(width, height, visualImages[i])) {
-            allValid = false;
-            break;
+  
+        // 이미지 합성
+        for (const img of visualImages) {
+            if (!validateImageSize(img, width, height)) {
+                alert(`업로드된 이미지 중 하나 이상의 이미지 사이즈가 선택된 버튼 사이즈와 맞지 않습니다.`);
+                return;
+            }
+            const bannerData = drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY);
+            bannerDataURLs.push(bannerData);
         }
-        const dataURL = drawVisualImage(width, height, radius, mimeType, visualImages[i], offsetX, offsetY);
-         bannerDataURLs.push(dataURL);
-    }
-    if (!allValid) return;
-        alert(`${button.innerText} 배너가 생성되었습니다.`);
+    alert(`${button.innerText} 배너가 생성되었습니다.`);
 }
 
 // 배너 생성 버튼 클릭 이벤트
@@ -177,7 +176,7 @@ downloadBtn.addEventListener('click', async () => {
     const height = parseInt(selectedButton.dataset.height);
     const mimeType = selectedButton.dataset.mime;
 
-    for (let i = 0; i < bannerDataURLs.length; i++) {
+    for (let i = 0; i < visualImages.length; i++) {
         const bannerData = bannerDataURLs[i];
         const fileName = `banner_${width}x${height}_${i + 1}.${mimeType.split('/')[1]}`;
         const base64Image = bannerData.split(',')[1];
