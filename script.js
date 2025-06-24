@@ -18,8 +18,8 @@ function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(resolve(img));
-        img.onerror = () => reject(reject(img));
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(e);
         img.src = src;
     });
 }
@@ -134,17 +134,17 @@ async function processBanner(button) {
     }
 
     bannerDataURLs = []; // 초기화
-    
-        // 이미지 합성
-        for (const img of visualImages) {
-            if (!validateImageSize(img, width, height)) {
-                alert(`업로드된 이미지 중 하나 이상의 이미지 사이즈가 선택된 버튼 사이즈와 맞지 않습니다.`);
-                return;
-            }
-            const bannerData = drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY);
-            bannerDataURLs.push(bannerData);
+
+    // 이미지 합성
+    for (const img of visualImages) {
+        if (!validateImageSize(img, width, height)) {
+            alert(`업로드된 이미지 중 하나 이상의 이미지 사이즈가 선택된 버튼 사이즈와 맞지 않습니다.`);
+            return;
         }
-        alert(`${button.innerText} 배너가 생성되었습니다.`);
+        const bannerData = drawVisualImage(width, height, radius, mimeType, img, offsetX, offsetY);
+        bannerDataURLs.push(bannerData);
+    }
+    alert(`${button.innerText} 배너가 생성되었습니다.`);
 }
 
 // 배너 생성 버튼 클릭 이벤트
