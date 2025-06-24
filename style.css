@@ -1,39 +1,42 @@
 body {
-  font-family: sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  padding: 30px;
+    font-family: sans-serif;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 30px;
 }
+
 .container {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
 input {
-  display: block;
-  margin-bottom: 15px;
+    display: block;
+    margin-bottom: 15px;
 }
+
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
 /* 활성화된 버튼 스타일 */
 button.active {
-  background-color: #007bff; /* 원하는 색상으로 변경 */
-  color: white;
+    background-color: #007bff; /* 원하는 색상으로 변경 */
+    color: white;
 }
 
 /* 버튼 위치 (캔버스 아래에 배치) */
 .button-container {
-  text-align: center;
-  margin-top: 20px;
+    text-align: center;
+    margin-top: 20px;
 }
