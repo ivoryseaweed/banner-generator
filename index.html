@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>배너 이미지 생성기</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>배너 이미지 생성기</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>🎨 배너 이미지 자동 생성기</h1>
+    <div class="container">
+        <h1>🎨 배너 이미지 자동 생성기</h1>
 
-    <label>배너 템플릿 업로드:</label>
-    <input type="file" id="templateInput" accept="image/*"/>
+        <label>배너 템플릿 업로드:</label>
+        <input type="file" id="templateInput" accept="image/*"/>
 
-    <label>비주얼 이미지들 업로드 (여러 개):</label>
-    <input type="file" id="visualsInput" accept="image/*" multiple/>
+        <label>비주얼 이미지들 업로드 (여러 개):</label>
+        <input type="file" id="visualsInput" accept="image/*" multiple/>
 
-    <div class="button-container">
-      <button id="button1">315x186 (PNG)</button>
-      <button id="button2">232x232 (PNG)</button>
-      <button id="button3">1200x497 (JPG)</button>
+        <div class="button-container">
+            <button id="button1">315x186 (PNG)</button>
+            <button id="button2">232x232 (PNG)</button>
+            <button id="button3">1200x497 (JPG)</button>
+        </div>
+
+        <canvas id="canvas" width="1029" height="258"></canvas>
+
+        <button id="downloadBtn">다운로드</button>
     </div>
-    
-    <canvas id="canvas" width="1029" height="258"></canvas>
 
-    <button id="downloadBtn">다운로드</button>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
