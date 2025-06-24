@@ -20,7 +20,6 @@ function loadImage(src) {
         img.src = src;
     });
 }
-
 // 배너 템플릿 및 비주얼 이미지 로드 함수
 async function loadImages() {
     const templateFile = templateInput.files[0];
@@ -34,7 +33,14 @@ async function loadImages() {
     try {
         templateImage = await loadImage(URL.createObjectURL(templateFile));
         visualImage = await loadImage(URL.createObjectURL(visualFile));
-        alert('이미지 로딩 완료! px 사이즈 버튼을 누르세요');
+        
+        // 선택된 버튼이 있다면 이미지 사이즈 검증
+        if (selectedButton) {
+            validateImageSize();
+        } else {
+            alert('이미지 로딩 완료! px 사이즈 버튼을 누르세요');
+        }
+
     } catch (error) {
         console.error("이미지 로딩 중 오류 발생:", error);
         alert('이미지 로딩 중 오류가 발생했습니다.');
@@ -47,17 +53,16 @@ function removeActiveClasses() {
 }
 
 // 이미지 합성 함수
-function drawVisualImage(width, height, radius, mimeType) {
-    if (!visualImage || !templateImage) {
-        alert('배너 템플릿과 비주얼 이미지를 먼저 업로드해주세요!');
-        return;
-    }
+function drawVisualImage() {
+  if (!visualImage || !templateImage) {
+    alert('배너 템플릿과 비주얼 이미지를 먼저 업로드해주세요!');
+    return;
+  }
 
-    // 업로드된 이미지 사이즈 검증
-    if (visualImage.width !== width || visualImage.height !== height) {
-        alert(`업로드된 이미지 사이즈가 선택된 버튼 사이즈와 다릅니다. (${width}x${height} 이미지를 업로드해주세요.)`);
-        return;
-    }
+  const width = parseInt(selectedButton.dataset.width);
+  const height = parseInt(selectedButton.dataset.height);
+  const radius = parseInt(selectedButton.dataset.radius);
+  const mimeType = selectedButton.dataset.mime;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(templateImage, 0, 0);
@@ -79,8 +84,23 @@ function drawVisualImage(width, height, radius, mimeType) {
     }
     // 비주얼 이미지 그리기
     ctx.drawImage(visualImage, 48, 36, width, height);
-    bannerDataURL = canvas.toDataURL(mimeType); // 배너 데이터 URL 저장
 
+    bannerDataURL = canvas.toDataURL(mimeType); // 배너 데이터 URL 저장
+}
+
+// 이미지 사이즈 검증 함수
+function validateImageSize() {
+    const width = parseInt(selectedButton.dataset.width);
+    const height = parseInt(selectedButton.dataset.height);
+
+    if (visualImage.width !== width || visualImage.height !== height) {
+        alert(`업로드된 이미지 사이즈가 선택된 버튼 사이즈와 다릅니다. (${width}x${height} 이미지를 업로드해주세요.)`);
+        visualImage = null; // 이미지 정보 초기화
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
+        return false;
+    }
+
+    return true;
 }
 
 // 배너 생성 버튼 클릭 이벤트
@@ -88,18 +108,19 @@ buttonContainer.addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
         removeActiveClasses();
         event.target.classList.add('active');
-
         selectedButton = event.target;
-
-        const width = parseInt(event.target.dataset.width);
-        const height = parseInt(event.target.dataset.height);
-        const radius = parseInt(event.target.dataset.radius);
-        const mimeType = event.target.dataset.mime;
         
-        drawVisualImage(width, height, radius, mimeType);
-
+        if (visualImage && templateImage) {
+            if (validateImageSize()) {
+                drawVisualImage();
+                alert(`${event.target.innerText} 배너가 생성되었습니다.`);
+            }
+        } else {
+            alert("템플릿과 비주얼 이미지를 모두 업로드해주세요!");
+        }
     }
 });
+
 // 다운로드 함수
 function downloadBanner() {
     if (!bannerDataURL) {
@@ -114,6 +135,7 @@ function downloadBanner() {
     link.download = fileName;
     link.click();
 }
+
 // 다운로드 버튼 클릭 이벤트
 downloadBtn.addEventListener('click', () => {
     if (!selectedButton) {
@@ -126,6 +148,7 @@ downloadBtn.addEventListener('click', () => {
     }
     downloadBanner();
 });
+
 // 템플릿, 비주얼 이미지 로드
 templateInput.addEventListener('change', loadImages);
 visualsInput.addEventListener('change', loadImages);
