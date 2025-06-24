@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target.tagName === 'BUTTON') {
             selectedSize = event.target.dataset.size;
             console.log('Selected size:', selectedSize);
+            bannerCanvas.style.display = 'block'; // 버튼 클릭 시 캔버스 표시
         }
     });
 
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, bannerCanvas.width, bannerCanvas.height);
         templateImageInput.value = '';
         visualImagesInput.value = '';
+        bannerCanvas.style.display = 'none'; // 초기화 시 캔버스 숨김
         console.log('초기화되었습니다.');
     });
 
@@ -164,8 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // 캔버스에 이미지 그리기
-                    ctx.drawImage(templateImage, canvasWidth / 2, 0, canvasWidth / 2, canvasHeight); // 템플릿 이미지 오른쪽에 배치
-                    ctx.drawImage(visualImage, visualX, visualY, visualWidth, visualHeight);
+                    ctx.drawImage(visualImage, visualX, visualY, visualWidth, visualHeight); // 비주얼 이미지를 먼저 그림
+                    ctx.drawImage(templateImage, canvasWidth / 2, 0, canvasWidth / 2, canvasHeight); // 템플릿 이미지를 나중에 그림
 
                     if (borderRadius && selectedSize !== '1200x497') {
                         applyRoundedCorners(ctx, 0, 0, canvasWidth, canvasHeight, 20); // Adjust the radius as needed
