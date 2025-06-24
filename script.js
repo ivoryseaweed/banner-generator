@@ -70,38 +70,38 @@ function drawVisualImage(width, height, radius, mimeType, offsetY = 36) {
 
     // 캔버스 크기 변경
     canvasWidth = width === 1200 ? 1200 : 1029; // 1200x497 버튼 클릭 시 캔버스 가로 크기 1200으로 변경
-    canvasHeight = height === 1200 ? 600 : 258; // 캔버스 세로 크기 600으로 변경
+    canvasHeight = height === 497 && width === 1200 ? 600 : 258; // 캔버스 세로 크기 600으로 변경
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.drawImage(templateImage, 0, 0, canvasWidth, canvasHeight);
 
-    // 둥근 모서리 클리핑 경로 설정
     let offsetX = 48;
-    if (radius > 0) {
-        ctx.beginPath();
-        ctx.moveTo(offsetX + radius, offsetY);
-        ctx.lineTo(offsetX + width - radius, offsetY);
-        ctx.quadraticCurveTo(offsetX + width, offsetY, offsetX + width, offsetY + radius);
-        ctx.lineTo(offsetX + width, offsetY + height - radius);
-        ctx.quadraticCurveTo(offsetX + width, offsetY + height, offsetX + width - radius, offsetY + height);
-        ctx.lineTo(offsetX + radius, offsetY + height);
-        ctx.quadraticCurveTo(offsetX, offsetY + height, offsetX, offsetY + height - radius);
-        ctx.lineTo(offsetX, offsetY + radius);
-        ctx.quadraticCurveTo(offsetX, offsetY, offsetX + radius, offsetY);
-        ctx.closePath();
-        ctx.clip();
-    }
 
-    // 비주얼 이미지 그리기 (offsetY 적용)
+    // 1200x497 이미지의 경우 193px 여백 설정 및 둥근 모서리 제거
     if (width === 1200 && height === 497) {
         offsetY = 193;
         ctx.drawImage(visualImage, 0, offsetY, width, height);
     } else {
+        // 둥근 모서리 클리핑 경로 설정 (1200x497 제외)
+        if (radius > 0) {
+            ctx.beginPath();
+            ctx.moveTo(offsetX + radius, offsetY);
+            ctx.lineTo(offsetX + width - radius, offsetY);
+            ctx.quadraticCurveTo(offsetX + width, offsetY, offsetX + width, offsetY + radius);
+            ctx.lineTo(offsetX + width, offsetY + height - radius);
+            ctx.quadraticCurveTo(offsetX + width, offsetY + height, offsetX + width - radius, offsetY + height);
+            ctx.lineTo(offsetX + radius, offsetY + height);
+            ctx.quadraticCurveTo(offsetX, offsetY + height, offsetX, offsetY + height - radius);
+            ctx.lineTo(offsetX, offsetY + radius);
+            ctx.quadraticCurveTo(offsetX, offsetY, offsetX + radius, offsetY);
+            ctx.closePath();
+            ctx.clip();
+        }
       ctx.drawImage(visualImage, offsetX, offsetY, width, height);
     }
-    bannerDataURL = canvas.toDataURL(mimeType); // 배너 데이터 URL 저장
+    bannerDataURL = canvas.toDataURL(mimeType, (mimeType === 'image/jpeg' ? 0.9 : 1)); // JPG 품질 설정
 }
 
 // 이미지 사이즈 검증 함수
