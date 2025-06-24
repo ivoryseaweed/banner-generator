@@ -11,6 +11,13 @@
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+    background-color: #fff; /* 기본 배경색 */
+    border: 1px solid #ccc; /* 기본 테두리 */
+}
+
+/* 버튼 클릭 시 스타일 */
+.button-selection button:active {
+    background-color: #ccc; /* 클릭 시 배경색 변경 */
 }
 
 /* 이미지 업로드 영역 스타일 */
@@ -23,20 +30,17 @@
     margin-bottom: 5px;
 }
 
-/* 캔버스 영역 스타일 */
-.canvas-container {
-    margin: 20px 0;
-}
-
-/* 캔버스 스타일 */
-#banner-canvas {
-    border: 1px solid #000;
-}
-
 /* 컨트롤 버튼 영역 스타일 */
 .controls button {
     margin: 10px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+}
+
+/* 캔버스 스타일 */
+#banner-canvas {
+    border: 1px solid #000;
+    display: none; /* 초기에는 숨김 */
+    margin-top: 20px;
 }
